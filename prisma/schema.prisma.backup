@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+  output   = "../generated/prisma"
+}
+
+generator kysely {
+  provider = "prisma-kysely"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../database.db"
+}
+
+model mikro_orm_migrations {
+  id          Int       @id @default(autoincrement())
+  name        String?
+  executed_at DateTime? @default(now())
+}
+
+model ocpi_tokens {
+  id            Int @id @default(autoincrement()) 
+  valid         Int
+  language      String?
+  whitelist     String
+  issuer        String
+  visual_number String?
+  auth_id       String
+  type          String
+  ocpp_uid      String
+  uid           String?
+  ocpiclientid  Int
+  updatedat    DateTime?
+  createdat    DateTime?
+  last_updated DateTime
+  auth_member   String
+
+}
+
+model payouts {
+  id            String   @id 
+  currency      String               @default("EUR")
+  amount        Decimal              @default(0)
+  transactionId String  @unique(map: "sqlite_autoindex_payouts_2")
+  userId        String
+  createdAt     DateTime
+  updatedAt     DateTime
+  users         users                @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+}
+
+model users {
+  id        String    @id
+  name      String
+  email     String               @unique(map: "sqlite_autoindex_users_2")
+  createdAt DateTime
+  updatedAt DateTime
+  payouts   payouts[]            
+}

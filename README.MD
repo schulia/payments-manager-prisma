@@ -28,9 +28,10 @@ The other endpoints are CRUD endpoints with no business logic
 
 MikroORM 
 
+
 generate the queries from entities : 
-npx mikro-orm schema:create --dump 
-npx mikro-orm schema:update --dump 
+npx prisma migrate dev --name sync_all_changes
 
 generate entities from db: 
-npx  mikro-orm generate-entities --dump
+npx prisma db pull
+
